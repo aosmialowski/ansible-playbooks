@@ -1,0 +1,7 @@
+---
+- name: Deploy Symfony application
+  hosts: 'symfony'
+  sudo: False
+  roles:
+    - role: ../roles/symfony
+      tags: [ 'role::symfony', 'symfony' ]

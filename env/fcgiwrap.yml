@@ -1,0 +1,7 @@
+---
+- name: Manage fcgiwrap instances
+  hosts: 'fcgiwrap'
+  sudo: True
+  roles:
+    - role: debops.fcgiwrap
+      tags: [ 'role::fcgiwrap', 'fcgiwrap' ]

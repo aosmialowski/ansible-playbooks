@@ -1,0 +1,7 @@
+---
+- name: Manage Monit service
+  hosts: 'monit'
+  become: True
+  roles:
+    - role: debops.monit
+      tags: [ 'role::monit', 'monit' ]

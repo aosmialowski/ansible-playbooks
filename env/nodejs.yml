@@ -1,0 +1,7 @@
+---
+- name: Manage NodeJS environment
+  hosts: 'nodejs'
+  sudo: True
+  roles:
+    - role: debops.nodejs
+      tags: [ 'role::nodejs', 'nodejs' ]

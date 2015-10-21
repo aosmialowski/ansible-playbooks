@@ -1,0 +1,4 @@
+---
+- include: swapfile.yml
+
+- include: sftpusers.yml

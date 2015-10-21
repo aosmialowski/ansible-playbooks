@@ -1,0 +1,110 @@
+---
+- name: Create directories for releases and shared data
+  file:
+    path:   '{{ item }}'
+    state:  'directory'
+    owner:  '{{ symfony_user }}'
+    group:  '{{ symfony_user }}'
+    mode:   '0755'
+  with_items:
+    - '{{ symfony_root }}'
+    - '{{ symfony_root }}/releases'
+    - '{{ symfony_root }}/shared'
+    - '{{ symfony_root }}/shared/app'
+    - '{{ symfony_root }}/shared/app/config'
+
+- name: Create release directory
+  file:
+    path:   '{{ symfony_release }}'
+    state:  'directory'
+    owner:  '{{ symfony_user }}'
+    group:  '{{ symfony_user }}'
+
+- name: Unarchive release package
+  unarchive:
+    src: '{{ symfony_package }}'
+    dest: '{{ symfony_release }}'
+    owner: '{{ symfony_user }}'
+    group: '{{ symfony_user }}'
+
+- name: Remove release package
+  file:
+    path: '{{ symfony_root }}/releases/{{ symfony_package }}'
+    state: 'absent'
+
+- name: Ensure directories for shared data are absent in release directory
+  file:
+    path: '{{ symfony_release }}/{{ item }}'
+    state: 'absent'
+  with_items: symfony_shared
+
+- name: Ensure parameters.yml file is absent in release directory
+  file:
+    path: '{{ symfony_release }}/app/config/parameters.yml'
+    state: 'absent'
+
+- name: Generate parameters.yml file
+  template:
+    src: 'parameters.j2'
+    dest: '{{ symfony_root }}/shared/app/config/parameters.yml'
+    force: 'yes'
+  with_items: symfony_parameters
+
+- name: Create symlink to shared parameters.yml file
+  file:
+    state:  'link'
+    src:    '{{ symfony_root }}/shared/app/config/parameters.yml'
+    path:   '{{ symfony_release }}/app/config/parameters.yml'
+    owner:  '{{ symfony_user }}'
+    group:  '{{ symfony_user }}'
+    force:  'yes'
+
+- name: Create shared directories
+  file:
+    state:  'directory'
+    path:   '{{ symfony_root }}/shared/{{ item }}'
+    owner:  '{{ symfony_user }}'
+    group:  '{{ symfony_user }}'
+    mode:   '0755'
+  with_items: symfony_shared
+
+- name: Create symlinks to shared directories
+  file:
+    state:  'link'
+    src:    '{{ symfony_root }}/shared/{{ item }}'
+    path:   '{{ symfony_release }}/{{ item }}'
+    owner:  '{{ symfony_user }}'
+    group:  '{{ symfony_user }}'
+    force:  'yes'
+  with_items: symfony_shared
+
+- name: Set cache/logs directories permission
+  shell: >
+    setfacl -R -m u:"www-data":rwX -m u:`whoami`:rwX {{ symfony_release }}/app/cache {{ symfony_release }}/app/logs &&
+    setfacl -dR -m u:"www-data":rwX -m u:`whoami`:rwX {{ symfony_release }}/app/cache {{ symfony_release }}/app/logs
+
+- name: Clear application cache
+  command: php app/console cache:clear --env=prod --no-debug chdir={{ symfony_release }}
+
+- name: Check if Doctrine migrations should run
+  shell: ls -AB1 {{ symfony_release }}/app/doctrine-migrations | wc -l
+  register: doctrine_migrations_dir
+
+- name: Run Doctrine migrations
+  shell: app/console doctrine:migrations:migrate -n chdir={{ symfony_release }}
+  environment:
+    SYMFONY_ENV: prod
+  when: doctrine_migrations_dir.stdout > '0'
+
+- name: Create symlink for current release
+  file:
+    state:  'link'
+    path:   '{{ symfony_current }}'
+    src:    '{{ symfony_release }}'
+    owner:  '{{ symfony_user }}'
+    group:  '{{ symfony_user }}'
+    force:  'yes'
+    mode:   '0755'
+
+- name: Cleanup old application releases
+  shell: ls -r1 | tail -n +$(({{ symfony_keep_releases }}+1)) | xargs -n1 rm -rf chdir={{ symfony_root }}/releases

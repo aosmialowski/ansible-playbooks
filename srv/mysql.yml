@@ -1,0 +1,11 @@
+---
+- name: Manage MySQL server
+  hosts: 'mysql'
+  become: True
+  roles:
+    - role: debops.mysql
+      tags: [ 'role::mysql', 'mysql' ]
+
+    - role: debops.phpmyadmin
+      when: mysql_phpmyadmin is defined and mysql_phpmyadmin
+      tags: [ 'role::mysql', 'mysql', 'phpmyadmin' ]

@@ -1,0 +1,7 @@
+---
+- name: Configure swap files
+  hosts: 'swapfile'
+  become: True
+  roles:
+    - role: debops.swapfile
+      tags: [ 'role::swapfile', 'swapfile' ]

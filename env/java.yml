@@ -1,0 +1,7 @@
+---
+- name: Manage Java environment
+  hosts: 'java'
+  sudo: True
+  roles:
+    - role: debops.java
+      tags: [ 'role::java', 'java' ]

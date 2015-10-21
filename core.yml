@@ -1,0 +1,8 @@
+---
+- name: Prepare core environment
+  hosts: 'all:!localhost'
+  become: False
+  roles:
+    - role: debops.core
+      tags: [ 'role::core', 'core' ]
+      become: True

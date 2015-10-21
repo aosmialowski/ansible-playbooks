@@ -1,0 +1,7 @@
+---
+- name: Manage fail2ban service
+  hosts: 'fail2ban'
+  become: True
+  roles:
+    - role: debops.fail2ban
+      tags: [ 'role::fail2ban', 'fail2ban' ]

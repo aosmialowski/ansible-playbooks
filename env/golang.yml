@@ -1,0 +1,7 @@
+---
+- name: Manage Go environment
+  hosts: 'golang'
+  sudo: True
+  roles:
+    - role: debops.golang
+      tags: [ 'role::golang', 'golang' ]

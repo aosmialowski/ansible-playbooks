@@ -1,0 +1,8 @@
+---
+- name: Install libsass library
+  hosts: 'development'
+  gather_facts: False
+  sudo: True
+  roles:
+    - role: aosmialowski.libsass
+      tags: [ 'role::libsass', 'libsass' ]

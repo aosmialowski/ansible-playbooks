@@ -1,0 +1,7 @@
+---
+- name: Bootstrap host for Ansible management
+  hosts: 'all:!localhost'
+  gather_facts: False
+  roles:
+    - role: debops.bootstrap
+      become: True

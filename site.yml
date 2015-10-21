@@ -1,0 +1,10 @@
+---
+- include: bootstrap.yml
+
+- include: common.yml
+
+- include: sys.yml
+
+- include: env.yml
+
+- include: srv.yml

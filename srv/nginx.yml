@@ -1,0 +1,7 @@
+---
+- name: Manage nginx server
+  hosts: 'nginx'
+  become: True
+  roles:
+    - role: debops.nginx
+      tags: [ 'role::nginx', 'nginx' ]

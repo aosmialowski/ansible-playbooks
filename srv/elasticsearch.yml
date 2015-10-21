@@ -1,0 +1,7 @@
+---
+- name: Manage Elasticsearch server
+  hosts: 'elasticsearch_master:elasticsearch_workhorse:elasticsearch_coordinator:elasticsearch_loadbalancer'
+  become: True
+  roles:
+    - role: debops.elasticsearch
+      tags: [ 'role::elasticsearch', 'elasticsearch' ]

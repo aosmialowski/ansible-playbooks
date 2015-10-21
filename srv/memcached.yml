@@ -1,0 +1,7 @@
+---
+- name: Manage Memcached server
+  hosts: 'memcached'
+  become: True
+  roles:
+    - role: debops.memcached
+      tags: [ 'role::memcached', 'memcached' ]

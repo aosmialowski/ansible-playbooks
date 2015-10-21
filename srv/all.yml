@@ -1,0 +1,20 @@
+---
+- include: nginx.yml
+
+- include: snmpd.yml
+
+- include: monit.yml
+
+- include: mysql.yml
+
+- include: postgresql_server.yml
+
+- include: postgresql.yml
+
+- include: elasticsearch.yml
+
+- include: memcached.yml
+
+- include: redis.yml
+
+- include: fail2ban.yml
