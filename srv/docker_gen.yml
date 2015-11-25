@@ -1,0 +1,7 @@
+---
+- name: Manage docker-gen service
+  hosts: 'docker_gen'
+  become: True
+  roles:
+    - role: debops.docker_gen
+      tags: [ 'role::docker_gen' ]

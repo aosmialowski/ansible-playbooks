@@ -6,6 +6,8 @@ debops.bootstrap
 debops.console
 debops.core
 debops.directories
+debops.docker
+debops.docker_gen
 debops.elasticsearch
 debops.etc_services
 debops.fail2ban
