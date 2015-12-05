@@ -1,6 +1,0 @@
-# {{ ansible_managed }}
-
-parameters:
-{% for item in symfony_parameters %}
-  {{ item.key }}: {{ item.value }}
-{% endfor %}
