@@ -1,4 +1,5 @@
 group_vars/
 host_vars/
+hosts/
 secret/
 test.yml
